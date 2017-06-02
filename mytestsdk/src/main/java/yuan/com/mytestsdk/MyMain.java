@@ -1,7 +1,5 @@
 package yuan.com.mytestsdk;
 
-import com.google.gson.Gson;
-
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -14,8 +12,6 @@ import java.net.URLClassLoader;
 public class MyMain {
     public static void main(String[] args) {
         System.out.println("hello~MyMain2 ");
-
-        Gson gson = new Gson();
 
         try {
 //            Class<?> c1 = Class.forName("com.google.gson.Gson");
