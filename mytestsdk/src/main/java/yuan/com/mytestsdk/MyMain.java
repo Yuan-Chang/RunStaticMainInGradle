@@ -11,17 +11,22 @@ import java.net.URLClassLoader;
 
 public class MyMain {
     public static void main(String[] args) {
-        System.out.println("hello~MyMain2 ");
+        String classPath = args[0];
+        String packageName = args[1];
+        String fileName = args[2];
+
+        System.out.println(classPath);
+
+        String packageFileName = packageName+"."+fileName;
+
+        System.out.println(packageFileName);
 
         try {
-//            Class<?> c1 = Class.forName("com.google.gson.Gson");
-//            System.out.println(c1.getName());
-
-
-            URLClassLoader urlClassLoader = URLClassLoader.newInstance(new URL[] { new File(args[0]).toURI().toURL()});
-            Class<?> c = urlClassLoader.loadClass("yuan.com.runstaticmainingradle.MyConfig");
+            URLClassLoader urlClassLoader = URLClassLoader.newInstance(new URL[] { new File(classPath).toURI().toURL()});
+            Class<?> c = urlClassLoader.loadClass(packageFileName);
             Object instance = c.newInstance();
-            System.out.println("hello~MyMain2 "+instance.toString());
+
+            System.out.println(instance.toString());
         } catch (MalformedURLException e) {
             e.printStackTrace();
         } catch (ClassNotFoundException e) {
