@@ -56,23 +56,25 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:25.3.0'
     testCompile 'junit:junit:4.12'
+    compile files('libs/gson-2.8.0.jar')
 }
 
 //run command => ./gradlew myTask -Parg1="hello6"
-task myTask (type: JavaExec){
-    def paths = ["${project.projectDir}/build/intermediates/classes/debug",
-                 "${project.projectDir}/build/intermediates/classes/release"]
-    classpath paths
-    main = 'yuan.com.mytestsdk.MyMain'
+//task myTask(type: JavaExec) {
+//    def paths = ["${project.projectDir}/build/intermediates/classes/debug",
+//                 "${project.projectDir}/build/intermediates/classes/release"]
+//    classpath paths
+//    main = 'yuan.com.mytestsdk.MyMain'
+//
+//    if (project.hasProperty("arg1")) {
+//        args = ["$arg1"]
+//    }
+//
+//}
 
-    if (project.hasProperty("arg1")) {
-        args = ["$arg1"]
-    }
-
-}

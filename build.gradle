@@ -15,6 +15,14 @@ buildscript {
 allprojects {
     repositories {
         jcenter()
+        maven { url "http://yuanchac.me:8081/repository/maven-snapshots/" }
+
+        maven { url "https://oss.sonatype.org/content/repositories/snapshots" }
+        maven { url 'http://iapps.corp.intuit.net/nexus/content/repositories/Intuit.Shared.Android-releases/' }
+        maven { url 'http://iapps.corp.intuit.net/nexus/content/repositories/Intuit.Shared.Android-snapshots/' }
+
+        maven { url 'http://nexus.scanbot.io/nexus/content/repositories/releases/' }
+        maven { url 'http://nexus.scanbot.io/nexus/content/repositories/snapshots/' }
     }
 }
 

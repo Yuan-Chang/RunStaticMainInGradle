@@ -20,13 +20,57 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     compile 'com.android.support:appcompat-v7:25.3.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha5'
+    //    compile 'com.intuit.scs:ImageCaptureSDK:3.8.2-SNAPSHOT'
     testCompile 'junit:junit:4.12'
+    compile 'com.yc.test:RunStaticMainInGradle:0.0.1-20170530.222442-1'
+    compile project(path: ':mytestsdk')
+
+    //compile files('libs/gson-2.8.0.jar')
+}
+
+task myTask(type: JavaExec) {
+    def PackageName = "yuan.com.mytestsdk"
+    def PackagePath = PackageName.replaceAll("\\.","/")
+
+    def myMainPath;
+    FileTree tree = fileTree(dir: '..', include: "**/"+PackagePath+"/MyMain.class")
+    tree.each {File file ->
+
+        def first = PackageName.split("\\.")[0]
+
+        while(!file.name.equals(first))
+            file = file.parentFile
+        myMainPath = [file.parentFile.absolutePath]
+    }
+
+    def myConfigPath;
+    tree = fileTree(dir: '.', include: "**/MyConfig.class")
+    tree.each {File file ->
+
+//        def first = PackageName.split("\\.")[0]
+//
+//        while(!file.name.equals(first))
+//            file = file.parentFile
+
+        myConfigPath = file.parentFile.absolutePath
+    }
+    println myConfigPath
+
+    if (myMainPath != null)
+        classpath myMainPath
+    main = PackageName+".MyMain"
+
+    //if (project.hasProperty("arg1")) {
+    if (myConfigPath != null)
+    args = [myConfigPath]
+    //}
+
 }
 
 
