@@ -29,7 +29,7 @@ dependencies {
     //    compile 'com.intuit.scs:ImageCaptureSDK:3.8.2-SNAPSHOT'
     testCompile 'junit:junit:4.12'
     compile 'com.yc.test:RunStaticMainInGradle:0.0.1-20170602.184238-5'
-    compile project(path: ':mytestsdk')
+    //compile project(path: ':mytestsdk')
 
     //compile files('libs/gson-2.8.0.jar')
 }
