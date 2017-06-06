@@ -28,48 +28,77 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha5'
     //    compile 'com.intuit.scs:ImageCaptureSDK:3.8.2-SNAPSHOT'
     testCompile 'junit:junit:4.12'
-    compile 'com.yc.test:RunStaticMainInGradle:0.0.1-20170602.184238-5'
+    compile 'com.yc.test:RunStaticMainInGradle:0.0.1-20170603.021933-7'
     //compile project(path: ':mytestsdk')
 
     //compile files('libs/gson-2.8.0.jar')
 }
 
 task myTask(type: JavaExec) {
-    def PackageName = "yuan.com.mytestsdk"
-    def PackagePath = PackageName.replaceAll("\\.","/")
 
-    def myMainPath;
-    FileTree tree = fileTree(dir: '..', include: "**/"+PackagePath+"/MyMain.class")
-    tree.each {File file ->
+    def ConfigFileName = "MyConfig"
+    def ConfigFilePackageName = "yuan.com.runstaticmainingradle"
 
-        def first = PackageName.split("\\.")[0]
+    def executeFileName = "MyMain"
+    def executeFilePackageName = "yuan.com.mytestsdk"
+    def executeFilePackagePath = executeFilePackageName.replaceAll("\\.","/")
 
-        while(!file.name.equals(first))
-            file = file.parentFile
-        myMainPath = [file.parentFile.absolutePath]
+    def libraryName = "RunStaticMainInGradle"
+
+    def executeFileClassPath;
+    fileTree(dir: '..', include: "**/${executeFilePackagePath}/${executeFileName}.class").each {
+        File file -> executeFileClassPath = [file.absolutePath.substring(0,file.absolutePath.indexOf("/${executeFilePackagePath}"))]
+    }
+    if (executeFileClassPath == null)
+    {
+        fileTree(dir: '..', include: ".idea/libraries/${libraryName}*").each { File file ->
+            def roots = new XmlSlurper().parseText(file.getText()).library.CLASSES.root
+            for(int i=0; i<roots.size(); i++)
+            {
+                def url = roots[i].@url.text()
+                if (url.endsWith("classes.jar!/"))
+                {
+                    url = url.replaceFirst("jar://\\\$PROJECT_DIR\\\$",{project.rootDir})
+                    url = url.replaceFirst("jar://\\\$USER_HOME\\\$",{System.getProperty("user.home")})
+                    url = url.substring(0,url.length()-2)
+                    executeFileClassPath = [url]
+                    break
+                }
+            }
+        }
     }
 
-    def myConfigPath;
-    tree = fileTree(dir: '.', include: "**/MyConfig.class")
-    tree.each {File file ->
-
-//        def first = PackageName.split("\\.")[0]
-//
-//        while(!file.name.equals(first))
-//            file = file.parentFile
-
-        myConfigPath = file.parentFile.absolutePath
+    def configFilePackagePath = ConfigFilePackageName.replaceAll("\\.","/")
+    def configFileClassPath;
+    fileTree(dir: '.', include: "**/${configFilePackagePath}/${ConfigFileName}.class").each {
+        File file -> configFileClassPath = file.absolutePath.substring(0,file.absolutePath.indexOf("/${configFilePackagePath}"))
     }
-    println myConfigPath
 
-    if (myMainPath != null)
-        classpath myMainPath
-    main = PackageName+".MyMain"
+    def gsonPath;
+    fileTree(dir: '..', include: "**/${executeFilePackagePath}/${executeFileName}.class").each {
+        File file -> executeFileClassPath = [file.absolutePath.substring(0,file.absolutePath.indexOf("/${executeFilePackagePath}"))]
+    }
+    fileTree(dir: '..', include: ".idea/libraries/gson*.xml").each { File file ->
+        def roots = new XmlSlurper().parseText(file.getText()).library.CLASSES.root
+        for(int i=0; i<roots.size(); i++)
+        {
+            def url = roots[i].@url.text()
+            if (url.endsWith("gson-2.2.4.jar!/"))
+            {
+                url = url.replaceFirst("jar://\\\$PROJECT_DIR\\\$",{project.rootDir})
+                url = url.replaceFirst("jar://\\\$USER_HOME\\\$",{System.getProperty("user.home")})
+                url = url.substring(0,url.length()-2)
+                gsonPath = url
+                break
+            }
+        }
+    }
 
-    //if (project.hasProperty("arg1")) {
-    if (myConfigPath != null)
-    args = [myConfigPath]
-    //}
+    if (executeFileClassPath != null) classpath executeFileClassPath
+    main = "${executeFilePackageName}.${executeFileName}"
+
+    if (configFileClassPath != null)
+        args = [configFileClassPath,ConfigFilePackageName,ConfigFileName,gsonPath]
 
 }
 
