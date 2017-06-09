@@ -19,6 +19,21 @@ android {
     }
 }
 
+buildscript {
+    repositories {
+        jcenter()
+        maven { url "http://yuanchac.me:8081/repository/maven-snapshots/" }
+    }
+    dependencies {
+        classpath 'com.yc.test:RunStaticMainInGradle:0.0.1-20170609.224558-8'
+    }
+
+}
+
+//afterEvaluate { project -> // afterEvaluate for resolving the build script dependency
+//    apply from: project.buildscript.classLoader.getResource('path/to/your/resource/in/the/jar').toURI()
+//}
+
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
@@ -28,7 +43,7 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha5'
     //    compile 'com.intuit.scs:ImageCaptureSDK:3.8.2-SNAPSHOT'
     testCompile 'junit:junit:4.12'
-    compile 'com.yc.test:RunStaticMainInGradle:0.0.1-20170603.021933-7'
+    //compile 'com.yc.test:RunStaticMainInGradle:0.0.1-20170609.224558-8'
     //compile project(path: ':mytestsdk')
 
     //compile files('libs/gson-2.8.0.jar')
