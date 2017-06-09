@@ -97,7 +97,7 @@ task myTask(type: JavaExec) {
     if (executeFileClassPath != null) classpath executeFileClassPath
     main = "${executeFilePackageName}.${executeFileName}"
 
-    if (configFileClassPath != null)
+    if (configFileClassPath != null && gsonPath != null)
         args = [configFileClassPath,ConfigFilePackageName,ConfigFileName,gsonPath]
 
 }
